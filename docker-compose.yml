@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  frontend:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    networks:
+      - app_net
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf  # Mount config
+      - ./bash_output:/usr/share/nginx/html/output    
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    networks:
+      - app_net
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+    ports:  # ADD THIS SECTION
+      - "8000:8000"  # Expose backend directly
+    volumes:
+      - ./bash_output:/app/output
+      - ./logs:/app/logs  # Local logs
+    restart: unless-stopped
+
+networks:  # Add this section at bottom
+  app_net:
+    driver: bridge      
+      #olumes:
+      #ash_output:

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bash Generator</title>
+</head>
+<body>
+    <h1>What bash magic do you need? </h1>
+    <input type="text" id="prompt" placeholder="Make me a backup script..." style="width: 300px;">
+    <button onclick="generateBash()">Go!</button>
+    <div id="result"></div>
+
+<script>
+async function generateBash() {
+    try {
+        console.log("Sending prompt..."); // Debug 1
+        const prompt = document.getElementById('prompt').value;
+	// Use relative path with /api prefix
+	const response = await fetch('/api/generate_bash', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: prompt })
+        });
+        console.log("Response status:", response.status); // Debug 2
+        const data = await response.json();
+        console.log("Full response:", data); // Debug 3
+        
+        if(data.status === "OK") {
+            window.open(data.output_file, '_blank');
+        } else {
+            alert(`Backend error: ${data.error}`);
+        }
+    } catch (error) {
+        console.error("Critical error:", error); // Debug 4
+        alert(`Network failure: ${error.message}`);
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+fastapi>=0.95.2
+openai>=1.12.0  # New SDK style
+uvicorn>=0.22.0
+tenacity>=8.2.3
+python-multipart>=0.0.6
